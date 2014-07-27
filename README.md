@@ -1,6 +1,5 @@
-Haskell example:
-================
-a simple fractal image renderer
+### Haskell example:
+A simple fractal image renderer
 ===============================
 
 I've always been intrigued by fractals, and decided to make an example program
