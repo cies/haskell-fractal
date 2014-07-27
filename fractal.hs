@@ -1,5 +1,3 @@
-module Main where
-
 import Prelude                hiding (concat, writeFile)
 import Data.ByteString.Char8  (append, concat, pack, writeFile)
 import Data.Char              (chr)
@@ -43,4 +41,3 @@ main = writeFile "out.pgm" . append pgmHeader . concat $ map row ys
     row y      = pack [gray . realize $ fractal (x :+ y) (0 :+ 0) 0 | x <- xs]
     gray f     = chr . truncate . (* 255) . sharpen $ 1 - f
     sharpen v  = 1 - exp (-exp ((v - 0.92) / 0.031))  -- increase contrast
-
