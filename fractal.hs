@@ -1,6 +1,5 @@
-import Prelude                hiding (concat, writeFile)
-import Data.ByteString.Char8  (append, concat, pack, writeFile)
-import Data.Char              (chr)
+import Codec.Picture          (generateImage, writePng)
+import Data.Word              (Word8)
 import Data.Complex           (Complex(..), magnitude, realPart)
 
 
@@ -32,12 +31,18 @@ realize (z, iter) = smooth z iter
     smooth z' iter' = (fromIntegral iter' - eta z') / fromIntegral maxIters
     eta z''         = logBase 2 (log (magnitude z''))
 
-main :: IO ()
-main = writeFile "out.pgm" . append pgmHeader . concat $ map row ys
+render :: Int -> Int -> Word8
+render xImage yImage = gray . realize $ fractal (x :+ y) (0 :+ 0) 0
   where
-    dist a b n = [a, ((b - a) / (fromIntegral n - 1) + a)..b]
-    (xs, ys)   = (dist x0 x1 width, dist y0 y1 height)
-    pgmHeader  = pack ("P5\n" ++ show width ++ " " ++ show height ++ "\n255\n")
-    row y      = pack [gray . realize $ fractal (x :+ y) (0 :+ 0) 0 | x <- xs]
-    gray f     = chr . truncate . (* 255) . sharpen $ 1 - f
+    widthFloat = fromIntegral width
+    heightFloat = fromIntegral height
+    x = (x1 - x0) * fromIntegral xImage / widthFloat + x0
+    y = (y1 - y0) * fromIntegral yImage / heightFloat + y0
+
+    gray f     = truncate . (* 255) . sharpen $ 1 - f
     sharpen v  = 1 - exp (-exp ((v - 0.92) / 0.031))  -- increase contrast
+
+main :: IO ()
+main =
+  writePng "out.png" $ generateImage render width height
+
