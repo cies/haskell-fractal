@@ -1,0 +1,35 @@
+\documentclass[a4paper]{article}
+
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{courier}
+\usepackage{eso-pic,graphicx}
+\usepackage[top=2cm, bottom=2cm, outer=0cm, inner=0cm]{geometry}
+\usepackage{adjustbox}
+\usepackage{scrextend}
+
+\begin{document}
+\pagenumbering{gobble}
+\AddToShipoutPictureBG*{\includegraphics[width=\paperwidth,height=\paperheight]{w10000_i1200.png}}
+\ \\
+\vspace{14.6cm}
+\begin{addmargin}[1cm]{2cm}
+\begin{adjustbox}{width=5.8cm,keepaspectratio}
+\lstset{ %
+  basicstyle=\ttfamily,
+  commentstyle=\color{gray}\textit,
+  extendedchars=true,
+  keepspaces=true,
+  keywordstyle=\color{gray}\textbf,
+  language=Haskell,
+  morekeywords={Picture, Word, Word8, fractal, grayify, main, sharpen, smooth, eta, generateImage, writePng, trans, realize, render},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\ttfamily,
+  showstringspaces=false,
+  stepnumber=1
+}
+\lstinputlisting{fractal.hs}
+\end{adjustbox}
+\end{addmargin}
+\end{document}

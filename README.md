@@ -28,7 +28,7 @@ format. Have a [look](https://raw.githubusercontent.com/cies/haskell-fractal/mas
 
 ## PDF version
 
-This code comes with a [PDF version](https://github.com/cies/haskell-fractal/blob/master/haskell-fractal.pdf?raw=true)
+This code comes with a [PDF version](https://github.com/cies/haskell-fractal/blob/master/poster.pdf?raw=true)
 of the fractal rendering combined with the Haskell source code used to create it.
 
 
