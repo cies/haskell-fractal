@@ -1,6 +1,6 @@
-import Codec.Picture          (generateImage, writePng)
-import Data.Word              (Word8)
-import Data.Complex           (Complex(..), magnitude, realPart)
+import Codec.Picture  (generateImage, writePng)
+import Data.Word      (Word8)
+import Data.Complex   (Complex(..), magnitude)
 
 
 aspectRatio :: Double
@@ -19,9 +19,9 @@ maxIters = 1200
 
 fractal :: RealFloat a => Complex a -> Complex a -> Int -> (Complex a, Int)
 fractal c z iter
-    | iter >= maxIters     = (1 :+ 1, 0)  -- invert values inside the holes
-    | realPart z' ** 2 > 4 = (z', iter)
-    | otherwise            = fractal c z' (iter + 1)
+    | iter >= maxIters = (1 :+ 1, 0)  -- invert values inside the holes
+    | magnitude z > 2  = (z', iter)
+    | otherwise        = fractal c z' (iter + 1)
   where
     z' = z * z + c
 
@@ -32,17 +32,12 @@ realize (z, iter) = smooth z iter
     eta z''         = logBase 2 (log (magnitude z''))
 
 render :: Int -> Int -> Word8
-render xImage yImage = gray . realize $ fractal (x :+ y) (0 :+ 0) 0
+render xi yi = grayify . realize $ fractal (x :+ y) (0 :+ 0) 0
   where
-    widthFloat = fromIntegral width
-    heightFloat = fromIntegral height
-    x = (x1 - x0) * fromIntegral xImage / widthFloat + x0
-    y = (y1 - y0) * fromIntegral yImage / heightFloat + y0
-
-    gray f     = truncate . (* 255) . sharpen $ 1 - f
-    sharpen v  = 1 - exp (-exp ((v - 0.92) / 0.031))  -- increase contrast
+    trans n0 n1 a ni = (n1 - n0) * fromIntegral ni / fromIntegral a + n0
+    (x, y)           = (trans x0 x1 width xi, trans y0 y1 height yi)
+    grayify f        = truncate . (* 255) . sharpen $ 1 - f
+    sharpen v        = 1 - exp (-exp ((v - 0.92) / 0.031))
 
 main :: IO ()
-main =
-  writePng "out.png" $ generateImage render width height
-
+main = writePng "out.png" $ generateImage render width height
