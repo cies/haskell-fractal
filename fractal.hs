@@ -11,7 +11,7 @@ x0, y0, x1, y1 :: Double
 (x1, y1) = (-0.8075, y0 + (x1 - x0) * aspectRatio)
 
 width, height :: Int
-(width, height) = (10000, round . (* aspectRatio) . fromIntegral $ width)
+(width, height) = (2000, round . (* aspectRatio) . fromIntegral $ width)
 
 maxIters :: Int
 maxIters = 1200
@@ -26,16 +26,14 @@ fractal c z iter
     z' = z * z + c
 
 realize :: RealFloat a => (Complex a, Int) -> a
-realize (z, iter) = smooth z iter
-  where
-    smooth z' iter' = (fromIntegral iter' - eta z') / fromIntegral maxIters
-    eta z''         = logBase 2 (log (magnitude z''))
+realize (z, iter) = (fromIntegral iter - log (log (magnitude z))) /
+                     fromIntegral maxIters
 
 render :: Int -> Int -> Word8
 render xi yi = grayify . realize $ fractal (x :+ y) (0 :+ 0) 0
   where
-    trans n0 n1 a ni = (n1 - n0) * fromIntegral ni / fromIntegral a + n0
     (x, y)           = (trans x0 x1 width xi, trans y0 y1 height yi)
+    trans n0 n1 a ni = (n1 - n0) * fromIntegral ni / fromIntegral a + n0
     grayify f        = truncate . (* 255) . sharpen $ 1 - f
     sharpen v        = 1 - exp (-exp ((v - 0.92) / 0.031))
 
