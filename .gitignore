@@ -8,6 +8,7 @@ fractal
 *.toc
 *.dvi
 dist
+auto
 .cabal-sandbox
 cabal.sandbox.config
 out.png

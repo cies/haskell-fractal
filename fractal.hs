@@ -11,7 +11,7 @@ x0, y0, x1, y1 :: Double
 (x1, y1) = (-0.8075, y0 + (x1 - x0) * aspectRatio)
 
 width, height :: Int
-(width, height) = (2000, round . (* aspectRatio) . fromIntegral $ width)
+(width, height) = (10000, round . (* aspectRatio) . fromIntegral $ width)
 
 maxIters :: Int
 maxIters = 1200
